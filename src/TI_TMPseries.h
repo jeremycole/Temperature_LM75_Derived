@@ -65,12 +65,10 @@ public:
   float readTemperatureF();
 };
 
-class TI_TMP75_Compatible : public TI_TMPseries {
-private:
+class TI_LM75_Compatible : public TI_TMPseries {
+protected:
 
   enum ConfigurationBits {
-    OneShot           = 7, // mask 0x80, length 1 bit
-    Resolution        = 5, // mask 0x60, length 2 bits
     FaultQueueLength  = 3, // mask 0x18, length 2 bits
     AlertPolarity     = 2, // mask 0x04, length 1 bit
     ThermostatMode    = 1, // mask 0x02, length 1 bit
@@ -94,13 +92,6 @@ private:
 
 public:
 
-  enum Resolution {
-    Resolution_9_bits   = 0,
-    Resolution_10_bits  = 1,
-    Resolution_11_bits  = 2,
-    Resolution_12_bits  = 3,
-  };
-
   enum FaultQueueLength {
     FaultQueueLength_1_fault   = 0,
     FaultQueueLength_2_faults  = 1,
@@ -108,20 +99,8 @@ public:
     FaultQueueLength_6_faults  = 3,
   };
 
-  TI_TMP75_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+  TI_LM75_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
     : TI_TMPseries(bus, i2c_address, attributes) { };
-
-  void startOneShotConversion() {
-    setConfigurationBits(_BV(ConfigurationBits::OneShot));
-  }
-
-  bool checkConversionReady() {
-    return checkConfigurationBits(_BV(ConfigurationBits::OneShot));
-  }
-
-  void setResolution(enum Resolution resolution) {
-    setConfigurationBitValue(resolution, ConfigurationBits::Resolution, 2);
-  }
 
   void setFaultQueueLength(enum FaultQueueLength faults) {
     setConfigurationBitValue(faults, ConfigurationBits::FaultQueueLength, 2);
@@ -151,6 +130,75 @@ public:
     clearConfigurationBits(_BV(ConfigurationBits::Shutdown));
   }
 };
+
+class TI_TMP75_Compatible : public TI_LM75_Compatible {
+protected:
+  enum ConfigurationBits {
+    OneShot           = 7, // mask 0x80, length 1 bit
+    Resolution        = 5, // mask 0x60, length 2 bits
+  };
+
+public:
+  enum Resolution {
+    Resolution_9_bits   = 0,
+    Resolution_10_bits  = 1,
+    Resolution_11_bits  = 2,
+    Resolution_12_bits  = 3,
+  };
+
+  TI_TMP75_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+    : TI_LM75_Compatible(bus, i2c_address, attributes) { };
+
+  void startOneShotConversion() {
+    setConfigurationBits(_BV(ConfigurationBits::OneShot));
+  }
+
+  bool checkConversionReady() {
+    return checkConfigurationBits(_BV(ConfigurationBits::OneShot));
+  }
+
+  void setResolution(enum Resolution resolution) {
+    setConfigurationBitValue(resolution, ConfigurationBits::Resolution, 2);
+  }
+};
+
+extern TI_TMPseries::Attributes TI_LM75_Attributes;
+
+class TI_LM75 : public TI_LM75_Compatible {
+public:
+  TI_LM75(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+    : TI_LM75_Compatible(bus, i2c_address, &TI_LM75_Attributes) { };
+
+  TI_LM75(uint8_t i2c_address)
+    : TI_LM75_Compatible(&Wire, i2c_address, &TI_LM75_Attributes) { };
+};
+
+extern TI_TMPseries::Attributes TI_TMPx75_Attributes;
+
+class TI_TMPx75 : public TI_TMP75_Compatible {
+public:
+  TI_TMPx75(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+    : TI_TMP75_Compatible(bus, i2c_address, &TI_TMPx75_Attributes) { };
+
+  TI_TMPx75(uint8_t i2c_address)
+    : TI_TMP75_Compatible(&Wire, i2c_address, &TI_TMPx75_Attributes) { };
+};
+class TI_TMP75 : public TI_TMPx75 {};
+class TI_TMP175 : public TI_TMPx75 {};
+class TI_TMP275 : public TI_TMPx75 {};
+
+extern TI_TMPseries::Attributes TI_TMP100_Attributes;
+
+class TI_TMP10x : public TI_TMP75_Compatible {
+public:
+  TI_TMP10x(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+    : TI_TMP75_Compatible(bus, i2c_address, &TI_TMPx75_Attributes) { };
+
+  TI_TMP10x(uint8_t i2c_address)
+    : TI_TMP75_Compatible(&Wire, i2c_address, &TI_TMPx75_Attributes) { };
+};
+class TI_TMP100 : public TI_TMP10x {};
+class TI_TMP101 : public TI_TMP10x {};
 
 extern TI_TMPseries::Attributes TI_TMP102_Attributes;
 
