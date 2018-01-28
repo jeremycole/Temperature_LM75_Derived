@@ -207,7 +207,7 @@ private:
 
   enum ExtendedConfigurationBits {
     ConversionRate  = 6, // mask 0x00c0, length 2 bits
-    Alarm           = 5, // mask 0x0020, length 1 bit
+    Alert           = 5, // mask 0x0020, length 1 bit
     ExtendedMode    = 4, // mask 0x0010, length 1 bit
   };
 
@@ -245,8 +245,8 @@ public:
     setExtendedConfigurationBitValue(rate, ExtendedConfigurationBits::ConversionRate, 2);
   }
 
-  bool checkAlarm() {
-    return checkExtendedConfigurationBits(ExtendedConfigurationBits::Alarm);
+  bool checkAlert() {
+    return checkExtendedConfigurationBits(_BV(ExtendedConfigurationBits::Alert));
   }
 
   void enableExtendedMode();
