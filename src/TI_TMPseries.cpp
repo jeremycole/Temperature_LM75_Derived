@@ -8,33 +8,35 @@ static float convertFtoC(float f) {
   return (f - 32) / 1.8;
 }
 
-// TODO: Deal with sign bit for negative numbers.
-// TODO: Deal with 13-bit temperature.
 int16_t TI_TMPseries::readIntegerTemperatureRegister() {
   // Select the temperature register.
   bus->beginTransmission(i2c_address);
   bus->write(REGISTER_TEMPERATURE);
   bus->endTransmission();
 
-  uint8_t t_raw;
-  int16_t t;
+  // Start a transaction to read the register data.
+  bus->requestFrom(i2c_address, (uint8_t) (resolution <= 8 ? 1 : 2));
 
-  // Read the temperature data; MSB first.
-  bus->requestFrom(i2c_address, (uint8_t) 2);
-  t_raw = bus->read();
-  t = t_raw << 8;
+  // Read the most significant byte of the temperature data.
+  uint16_t t = bus->read() << 8;
   
-  t_raw = bus->read();
-  t |= t_raw;
+  // Read the least significant byte of the temperature data, if requested.
+  if (resolution > 8) {
+    t |= bus->read();
+  }
+
+  // Finished reading the register data.
   bus->endTransmission();
 
-  t >>= 4;
+  // Mask out unused/reserved bit from the full 16-bit register.
+  t &= resolution_mask;
 
-  return t;
+  // Read the raw memory as a 16-bit signed integer and return.
+  return *(int16_t *)(&t);
 }
 
 float TI_TMPseries::readTemperatureC() {
-  return (float)readIntegerTemperatureRegister() / 16.0;
+  return (float)readIntegerTemperatureRegister() * TEMPERATURE_FRAC_FACTOR;
 }
 
 float TI_TMPseries::readTemperatureF() {
