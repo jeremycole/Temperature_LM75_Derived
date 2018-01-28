@@ -1,9 +1,9 @@
-#ifndef TI_TMPSERIES_H
-#define TI_TMPSERIES_H
+#ifndef TI_LM_TMP_SERIES_H
+#define TI_LM_TMP_SERIES_H
 
 #include <Wire.h>
 
-class TI_TMPseries {
+class TI_LM_TMP_series {
 public:
 
   // The layout of registers accessed through the I2C protocol.
@@ -61,7 +61,7 @@ protected:
 
 public:
 
-  TI_TMPseries(TwoWire *bus, uint8_t i2c_address, Attributes *attributes) {
+  TI_LM_TMP_series(TwoWire *bus, uint8_t i2c_address, Attributes *attributes) {
     this->bus = bus;
     this->i2c_address = i2c_address;
     this->attributes = attributes;
@@ -119,7 +119,7 @@ public:
   }
 };
 
-class TI_LM75_Compatible : public TI_TMPseries {
+class TI_LM75_Compatible : public TI_LM_TMP_series {
 protected:
 
   enum ConfigurationBits {
@@ -154,7 +154,7 @@ public:
   };
 
   TI_LM75_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
-    : TI_TMPseries(bus, i2c_address, attributes) { };
+    : TI_LM_TMP_series(bus, i2c_address, attributes) { };
 
   void setFaultQueueLength(enum FaultQueueLength faults) {
     setConfigurationBitValue(faults, ConfigurationBits::FaultQueueLength, 2);
@@ -216,7 +216,7 @@ public:
   }
 };
 
-extern TI_TMPseries::Attributes TI_LM75_Attributes;
+extern TI_LM_TMP_series::Attributes TI_LM75_Attributes;
 
 class TI_LM75 : public TI_LM75_Compatible {
 public:
@@ -227,7 +227,7 @@ public:
     : TI_LM75_Compatible(&Wire, i2c_address, &TI_LM75_Attributes) { };
 };
 
-extern TI_TMPseries::Attributes TI_TMPx75_Attributes;
+extern TI_LM_TMP_series::Attributes TI_TMPx75_Attributes;
 
 class TI_TMPx75 : public TI_TMP75_Compatible {
 public:
@@ -241,7 +241,7 @@ class TI_TMP75 : public TI_TMPx75 {};
 class TI_TMP175 : public TI_TMPx75 {};
 class TI_TMP275 : public TI_TMPx75 {};
 
-extern TI_TMPseries::Attributes TI_TMP100_Attributes;
+extern TI_LM_TMP_series::Attributes TI_TMP100_Attributes;
 
 class TI_TMP10x : public TI_TMP75_Compatible {
 public:
@@ -254,7 +254,7 @@ public:
 class TI_TMP100 : public TI_TMP10x {};
 class TI_TMP101 : public TI_TMP10x {};
 
-extern TI_TMPseries::Attributes TI_TMP102_Attributes;
+extern TI_LM_TMP_series::Attributes TI_TMP102_Attributes;
 
 class TI_TMP102 : public TI_TMP75_Compatible {
 private:
@@ -307,4 +307,4 @@ public:
   void disableExtendedMode();
 };
 
-#endif // TI_TMPSERIES_H
+#endif // TI_LM_TMP_SERIES_H

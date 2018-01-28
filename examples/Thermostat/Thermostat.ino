@@ -1,4 +1,4 @@
-#include <TI_TMPseries.h>
+#include <TI_LM_TMP_series.h>
 
 TI_TMP102 temperature;
 

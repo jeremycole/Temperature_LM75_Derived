@@ -1,14 +1,14 @@
-#include "TI_TMPseries.h"
+#include "TI_LM_TMP_series.h"
 
 // The standard register layout for most devices, based on TMP75.
-TI_TMPseries::RegisterLayout TI_LM75_Compatible_Registers = {
+TI_LM_TMP_series::RegisterLayout TI_LM75_Compatible_Registers = {
   .temperature      = 0x00,
   .configuration    = 0x01,
   .temperature_low  = 0x02,
   .temperature_high = 0x03,
 };
 
-TI_TMPseries::Attributes TI_LM75_Attributes = {
+TI_LM_TMP_series::Attributes TI_LM75_Attributes = {
   .temperature_width              = 16,
   .default_temperature_resolution = 9,
   .default_temperature_frac_width = 8,
@@ -16,7 +16,7 @@ TI_TMPseries::Attributes TI_LM75_Attributes = {
   .registers                      = &TI_LM75_Compatible_Registers,
 };
 
-TI_TMPseries::Attributes TI_TMPx75_Attributes = {
+TI_LM_TMP_series::Attributes TI_TMPx75_Attributes = {
   .temperature_width              = 16,
   .default_temperature_resolution = 12,
   .default_temperature_frac_width = 8,
@@ -24,7 +24,7 @@ TI_TMPseries::Attributes TI_TMPx75_Attributes = {
   .registers                      = &TI_LM75_Compatible_Registers,
 };
 
-TI_TMPseries::Attributes TI_TMP100_Attributes = {
+TI_LM_TMP_series::Attributes TI_TMP100_Attributes = {
   .temperature_width              = 16,
   .default_temperature_resolution = 12,
   .default_temperature_frac_width = 8,
@@ -32,7 +32,7 @@ TI_TMPseries::Attributes TI_TMP100_Attributes = {
   .registers                      = &TI_LM75_Compatible_Registers,
 };
 
-TI_TMPseries::Attributes TI_TMP102_Attributes = {
+TI_LM_TMP_series::Attributes TI_TMP102_Attributes = {
   .temperature_width              = 16,
   .default_temperature_resolution = 12,
   .default_temperature_frac_width = 8,
@@ -40,7 +40,7 @@ TI_TMPseries::Attributes TI_TMP102_Attributes = {
   .registers                      = &TI_LM75_Compatible_Registers,
 };
 
-int16_t TI_TMPseries::readIntegerTemperatureRegister(uint8_t register_index) {
+int16_t TI_LM_TMP_series::readIntegerTemperatureRegister(uint8_t register_index) {
   // Select the temperature register at register_index.
   bus->beginTransmission(i2c_address);
   bus->write(register_index);
@@ -67,7 +67,7 @@ int16_t TI_TMPseries::readIntegerTemperatureRegister(uint8_t register_index) {
   return *(int16_t *)(&t);
 }
 
-void TI_TMPseries::writeIntegerTemperatureRegister(uint8_t register_index, int16_t value) {
+void TI_LM_TMP_series::writeIntegerTemperatureRegister(uint8_t register_index, int16_t value) {
   bus->beginTransmission(i2c_address);
 
   bus->write(register_index);
