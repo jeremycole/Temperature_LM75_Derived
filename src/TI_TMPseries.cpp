@@ -40,18 +40,10 @@ TI_TMPseries::Attributes TI_TMP102_Attributes = {
   .registers                      = &TI_LM75_Compatible_Registers,
 };
 
-static float convertCtoF(float c) {
-  return c * 1.8 + 32;
-}
-
-static float convertFtoC(float f) {
-  return (f - 32) / 1.8;
-}
-
-int16_t TI_TMPseries::readIntegerTemperatureRegister() {
-  // Select the temperature register.
+int16_t TI_TMPseries::readIntegerTemperatureRegister(uint8_t register_index) {
+  // Select the temperature register at register_index.
   bus->beginTransmission(i2c_address);
-  bus->write(attributes->registers->temperature);
+  bus->write(register_index);
   bus->endTransmission();
 
   // Start a transaction to read the register data.
@@ -75,12 +67,17 @@ int16_t TI_TMPseries::readIntegerTemperatureRegister() {
   return *(int16_t *)(&t);
 }
 
-float TI_TMPseries::readTemperatureC() {
-  return (float)readIntegerTemperatureRegister() * temperature_frac_factor;
-}
+void TI_TMPseries::writeIntegerTemperatureRegister(uint8_t register_index, int16_t value) {
+  bus->beginTransmission(i2c_address);
 
-float TI_TMPseries::readTemperatureF() {
-  return convertCtoF(readTemperatureC());
+  bus->write(register_index);
+
+  uint16_t *value_ptr = (uint16_t *)&value;
+
+  bus->write((uint8_t)((*value_ptr & 0xff00) >> 8));
+  bus->write((uint8_t)(*value_ptr & 0x00ff));
+
+  bus->endTransmission();
 }
 
 uint8_t TI_LM75_Compatible::readConfigurationRegister() {

@@ -26,6 +26,14 @@ public:
   // The typical I2C address for any device.
   static const uint8_t DEFAULT_I2C_ADDRESS = 0x48;
 
+  inline static float convertCtoF(float c) {
+    return c * 1.8 + 32;
+  }
+
+  inline static float convertFtoC(float f) {
+    return (f - 32) / 1.8;
+  }
+
 protected:
 
   TwoWire *bus;
@@ -48,7 +56,8 @@ protected:
     temperature_frac_factor = 1.0 / (float)(1 << temperature_frac_width);
   }
 
-  int16_t readIntegerTemperatureRegister();
+  int16_t readIntegerTemperatureRegister(uint8_t register_index);
+  void writeIntegerTemperatureRegister(uint8_t register_index, int16_t value);
 
 public:
 
@@ -61,8 +70,53 @@ public:
     setInternalTemperatureFracWidth(attributes->default_temperature_frac_width);
   }
 
-  float readTemperatureC();
-  float readTemperatureF();
+  inline float convertIntegerTemperature(int16_t value) {
+    return (float)value * temperature_frac_factor;
+  }
+
+  inline int16_t convertFloatTemperature(float value) {
+    return (int16_t)(value / temperature_frac_factor);
+  }
+
+  float readTemperatureC() {
+    return convertIntegerTemperature(readIntegerTemperatureRegister(attributes->registers->temperature));
+  }
+
+  float readTemperatureF() {
+    return convertCtoF(readTemperatureC());
+  }
+
+  float readTemperatureLowC() {
+    return convertIntegerTemperature(readIntegerTemperatureRegister(attributes->registers->temperature_low));
+  }
+
+  float readTemperatureLowF() {
+    return convertCtoF(readTemperatureLowC());
+  }
+
+  void setTemperatureLowC(float value) {
+    writeIntegerTemperatureRegister(attributes->registers->temperature_low, convertFloatTemperature(value));
+  }
+
+  void setTemperatureLowF(float value) {
+    setTemperatureLowC(convertFtoC(value));
+  }
+
+  float readTemperatureHighC() {
+    return convertIntegerTemperature(readIntegerTemperatureRegister(attributes->registers->temperature_high));
+  }
+
+  float readTemperatureHighF() {
+    return convertCtoF(readTemperatureHighC());
+  }
+
+  void setTemperatureHighC(float value) {
+    writeIntegerTemperatureRegister(attributes->registers->temperature_high, convertFloatTemperature(value));
+  }
+
+  void setTemperatureHighF(float value) {
+    setTemperatureHighC(convertFtoC(value));
+  }
 };
 
 class TI_LM75_Compatible : public TI_TMPseries {
