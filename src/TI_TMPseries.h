@@ -24,6 +24,7 @@ public:
   }
   
   float readTemperatureC();
+  float readTemperatureF();
 };
 
 #endif // TI_TMPSERIES_H

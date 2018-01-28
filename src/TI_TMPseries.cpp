@@ -1,5 +1,13 @@
 #include "TI_TMPseries.h"
 
+static float convertCtoF(float c) {
+  return c * 1.8 + 32;
+}
+
+static float convertFtoC(float f) {
+  return (f - 32) / 1.8;
+}
+
 // TODO: Deal with sign bit for negative numbers.
 // TODO: Deal with 13-bit temperature.
 int16_t TI_TMPseries::readIntegerTemperatureRegister() {
@@ -27,5 +35,9 @@ int16_t TI_TMPseries::readIntegerTemperatureRegister() {
 
 float TI_TMPseries::readTemperatureC() {
   return (float)readIntegerTemperatureRegister() / 16.0;
+}
+
+float TI_TMPseries::readTemperatureF() {
+  return convertCtoF(readTemperatureC());
 }
 
