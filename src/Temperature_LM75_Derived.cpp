@@ -1,46 +1,46 @@
-#include "TI_LM_TMP_series.h"
+#include "Temperature_LM75_Derived.h"
 
-// The standard register layout for most devices, based on TMP75.
-TI_LM_TMP_series::RegisterLayout TI_LM75_Compatible_Registers = {
+// The standard register layout for most devices, based on LM75.
+Temperature_LM75_Derived::RegisterLayout LM75_Compatible_Registers = {
   .temperature      = 0x00,
   .configuration    = 0x01,
   .temperature_low  = 0x02,
   .temperature_high = 0x03,
 };
 
-TI_LM_TMP_series::Attributes TI_LM75_Attributes = {
+Temperature_LM75_Derived::Attributes Generic_LM75_Attributes = {
   .temperature_width              = 16,
   .default_temperature_resolution = 9,
   .default_temperature_frac_width = 8,
   .max_temperature_resolution     = 9,
-  .registers                      = &TI_LM75_Compatible_Registers,
+  .registers                      = &LM75_Compatible_Registers,
 };
 
-TI_LM_TMP_series::Attributes TI_TMPx75_Attributes = {
+Temperature_LM75_Derived::Attributes TI_TMPx75_Attributes = {
   .temperature_width              = 16,
   .default_temperature_resolution = 12,
   .default_temperature_frac_width = 8,
   .max_temperature_resolution     = 12,
-  .registers                      = &TI_LM75_Compatible_Registers,
+  .registers                      = &LM75_Compatible_Registers,
 };
 
-TI_LM_TMP_series::Attributes TI_TMP100_Attributes = {
+Temperature_LM75_Derived::Attributes TI_TMP100_Attributes = {
   .temperature_width              = 16,
   .default_temperature_resolution = 12,
   .default_temperature_frac_width = 8,
   .max_temperature_resolution     = 12,
-  .registers                      = &TI_LM75_Compatible_Registers,
+  .registers                      = &LM75_Compatible_Registers,
 };
 
-TI_LM_TMP_series::Attributes TI_TMP102_Attributes = {
+Temperature_LM75_Derived::Attributes TI_TMP102_Attributes = {
   .temperature_width              = 16,
   .default_temperature_resolution = 12,
   .default_temperature_frac_width = 8,
   .max_temperature_resolution     = 13,
-  .registers                      = &TI_LM75_Compatible_Registers,
+  .registers                      = &LM75_Compatible_Registers,
 };
 
-int16_t TI_LM_TMP_series::readIntegerTemperatureRegister(uint8_t register_index) {
+int16_t Temperature_LM75_Derived::readIntegerTemperatureRegister(uint8_t register_index) {
   // Select the temperature register at register_index.
   bus->beginTransmission(i2c_address);
   bus->write(register_index);
@@ -67,7 +67,7 @@ int16_t TI_LM_TMP_series::readIntegerTemperatureRegister(uint8_t register_index)
   return *(int16_t *)(&t);
 }
 
-void TI_LM_TMP_series::writeIntegerTemperatureRegister(uint8_t register_index, int16_t value) {
+void Temperature_LM75_Derived::writeIntegerTemperatureRegister(uint8_t register_index, int16_t value) {
   bus->beginTransmission(i2c_address);
 
   bus->write(register_index);
@@ -80,7 +80,7 @@ void TI_LM_TMP_series::writeIntegerTemperatureRegister(uint8_t register_index, i
   bus->endTransmission();
 }
 
-uint8_t TI_LM75_Compatible::readConfigurationRegister() {
+uint8_t Generic_LM75_Compatible::readConfigurationRegister() {
   bus->beginTransmission(i2c_address);
   bus->write(attributes->registers->configuration);
   bus->endTransmission();
@@ -92,7 +92,7 @@ uint8_t TI_LM75_Compatible::readConfigurationRegister() {
   return c;
 }
 
-void TI_LM75_Compatible::writeConfigurationRegister(uint8_t configuration) {
+void Generic_LM75_Compatible::writeConfigurationRegister(uint8_t configuration) {
   bus->beginTransmission(i2c_address);
 
   bus->write(attributes->registers->configuration);
@@ -101,7 +101,7 @@ void TI_LM75_Compatible::writeConfigurationRegister(uint8_t configuration) {
   bus->endTransmission();
 }
 
-void TI_LM75_Compatible::setConfigurationBits(uint8_t bits) {
+void Generic_LM75_Compatible::setConfigurationBits(uint8_t bits) {
   uint8_t configuration = readConfigurationRegister();
 
   configuration |= bits;
@@ -109,7 +109,7 @@ void TI_LM75_Compatible::setConfigurationBits(uint8_t bits) {
   writeConfigurationRegister(configuration);
 }
 
-void TI_LM75_Compatible::clearConfigurationBits(uint8_t bits) {
+void Generic_LM75_Compatible::clearConfigurationBits(uint8_t bits) {
   uint8_t configuration = readConfigurationRegister();
 
   configuration &= ~bits;
@@ -117,7 +117,7 @@ void TI_LM75_Compatible::clearConfigurationBits(uint8_t bits) {
   writeConfigurationRegister(configuration);
 }
 
-void TI_LM75_Compatible::setConfigurationBitValue(uint8_t value, uint8_t start, uint8_t width) {
+void Generic_LM75_Compatible::setConfigurationBitValue(uint8_t value, uint8_t start, uint8_t width) {
   uint8_t configuration = readConfigurationRegister();
 
   uint8_t mask = ((1 << width) - 1) << start;

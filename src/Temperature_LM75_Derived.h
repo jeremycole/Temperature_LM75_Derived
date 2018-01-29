@@ -3,7 +3,7 @@
 
 #include <Wire.h>
 
-class TI_LM_TMP_series {
+class Temperature_LM75_Derived {
 public:
 
   // The layout of registers accessed through the I2C protocol.
@@ -61,7 +61,7 @@ protected:
 
 public:
 
-  TI_LM_TMP_series(TwoWire *bus, uint8_t i2c_address, Attributes *attributes) {
+  Temperature_LM75_Derived(TwoWire *bus, uint8_t i2c_address, Attributes *attributes) {
     this->bus = bus;
     this->i2c_address = i2c_address;
     this->attributes = attributes;
@@ -119,7 +119,9 @@ public:
   }
 };
 
-class TI_LM75_Compatible : public TI_LM_TMP_series {
+extern Temperature_LM75_Derived::Attributes Generic_LM75_Attributes;
+
+class Generic_LM75_Compatible : public Temperature_LM75_Derived {
 protected:
 
   enum ConfigurationBits {
@@ -153,8 +155,8 @@ public:
     FaultQueueLength_6_faults  = 3,
   };
 
-  TI_LM75_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
-    : TI_LM_TMP_series(bus, i2c_address, attributes) { };
+  Generic_LM75_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+    : Temperature_LM75_Derived(bus, i2c_address, attributes) { };
 
   void setFaultQueueLength(enum FaultQueueLength faults) {
     setConfigurationBitValue(faults, ConfigurationBits::FaultQueueLength, 2);
@@ -185,7 +187,29 @@ public:
   }
 };
 
-class TI_TMP75_Compatible : public TI_LM75_Compatible {
+class Generic_LM75 : public Generic_LM75_Compatible {
+public:
+  Generic_LM75(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+    : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_Attributes) { };
+
+  Generic_LM75(uint8_t i2c_address)
+    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_Attributes) { };
+};
+
+class TI_LM75A : public Generic_LM75 {};
+class TI_LM75B : public Generic_LM75 {};
+class TI_LM75C : public Generic_LM75 {};
+
+class ST_STLM75 : public Generic_LM75 {};
+
+class NXP_LM75A : public Generic_LM75 {};
+class NXP_LM75B : public Generic_LM75 {};
+
+class ON_NCT75 : public Generic_LM75 {};
+
+class Maxim_DS1775 : public Generic_LM75 {};
+
+class TI_TMP75_Compatible : public Generic_LM75_Compatible {
 protected:
   enum ConfigurationBits {
     OneShot           = 7, // mask 0x80, length 1 bit
@@ -201,7 +225,7 @@ public:
   };
 
   TI_TMP75_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
-    : TI_LM75_Compatible(bus, i2c_address, attributes) { };
+    : Generic_LM75_Compatible(bus, i2c_address, attributes) { };
 
   void startOneShotConversion() {
     setConfigurationBits(_BV(ConfigurationBits::OneShot));
@@ -216,18 +240,7 @@ public:
   }
 };
 
-extern TI_LM_TMP_series::Attributes TI_LM75_Attributes;
-
-class TI_LM75 : public TI_LM75_Compatible {
-public:
-  TI_LM75(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
-    : TI_LM75_Compatible(bus, i2c_address, &TI_LM75_Attributes) { };
-
-  TI_LM75(uint8_t i2c_address)
-    : TI_LM75_Compatible(&Wire, i2c_address, &TI_LM75_Attributes) { };
-};
-
-extern TI_LM_TMP_series::Attributes TI_TMPx75_Attributes;
+extern Temperature_LM75_Derived::Attributes TI_TMPx75_Attributes;
 
 class TI_TMPx75 : public TI_TMP75_Compatible {
 public:
@@ -237,11 +250,12 @@ public:
   TI_TMPx75(uint8_t i2c_address)
     : TI_TMP75_Compatible(&Wire, i2c_address, &TI_TMPx75_Attributes) { };
 };
+
 class TI_TMP75 : public TI_TMPx75 {};
 class TI_TMP175 : public TI_TMPx75 {};
 class TI_TMP275 : public TI_TMPx75 {};
 
-extern TI_LM_TMP_series::Attributes TI_TMP100_Attributes;
+extern Temperature_LM75_Derived::Attributes TI_TMP100_Attributes;
 
 class TI_TMP10x : public TI_TMP75_Compatible {
 public:
@@ -251,10 +265,11 @@ public:
   TI_TMP10x(uint8_t i2c_address)
     : TI_TMP75_Compatible(&Wire, i2c_address, &TI_TMPx75_Attributes) { };
 };
+
 class TI_TMP100 : public TI_TMP10x {};
 class TI_TMP101 : public TI_TMP10x {};
 
-extern TI_LM_TMP_series::Attributes TI_TMP102_Attributes;
+extern Temperature_LM75_Derived::Attributes TI_TMP102_Attributes;
 
 class TI_TMP102 : public TI_TMP75_Compatible {
 private:
