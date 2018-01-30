@@ -2,7 +2,7 @@
 
 The following sensors are well-tested and should be completely compatible, with all feature supported (unless otherwise noted):
 
- Manufacturer | Part | Packages | V<sub>min</sub> | V<sub>max</sub> | Resolution | Acc. |OS | Class(es) | &nbsp;
+ Manufacturer | Part | &nbsp;&nbsp;Packages&nbsp;&nbsp; | V<sub>min</sub> | V<sub>max</sub> | Resolution | Acc. |OS | Class(es) | &nbsp;
 :---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:| ---
 Texas&nbsp;Instruments | [TMP102](http://www.ti.com/lit/ds/symlink/tmp102.pdf) | SOT563 | 1.4V | 3.6V | 9-13b <sup>1</sup> | ±1°C | ✓ | `TI_TMP102` | <sup>2</sup>&nbsp;<sup>3</sup>
 
@@ -21,7 +21,7 @@ While many of the below sensors have additional features (or higher accuracy) wh
 
 The following sensors are untested and are likely to work, but have not yet been tested:
 
- Manufacturer | Part | Packages | V<sub>min</sub> | V<sub>max</sub> | Resolution | Acc. | <abbr title="Supports one-shot mode">OS</abbr> | Class(es) | &nbsp;
+ Manufacturer | Part | &nbsp;&nbsp;Packages&nbsp;&nbsp; | V<sub>min</sub> | V<sub>max</sub> | Resolution | Acc. | <abbr title="Supports one-shot mode">OS</abbr> | Class(es) | &nbsp;
 :---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:| ---
 Texas&nbsp;Instruments | [TMP112](http://www.ti.com/lit/ds/symlink/tmp112.pdf) | SOT563 | 1.4V | 3.6V | 9-13b <sup>1</sup> | ±0.5°C | ✓ | `TI_TMP112` | <sup>2</sup>&nbsp;<sup>3</sup>&nbsp;<sup>4</sup>
 Texas&nbsp;Instruments | [LM75A](http://www.ti.com/lit/ds/symlink/lm75a.pdf) | SOIC8<br>VSSOP8 | 2.7V | 5.5V | 9b | ±2°C | | `TI_LM75A` |
