@@ -378,4 +378,6 @@ public:
   void disableExtendedMode();
 };
 
+class TI_TMP112 : public TI_TMP102 {};
+
 #endif // TI_LM_TMP_SERIES_H
