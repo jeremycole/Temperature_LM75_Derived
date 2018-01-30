@@ -202,21 +202,56 @@ class TI_LM75C : public Generic_LM75 {};
 
 class ST_STLM75 : public Generic_LM75 {};
 
-class NXP_LM75A : public Generic_LM75 {};
-class NXP_LM75B : public Generic_LM75 {};
+extern Temperature_LM75_Derived::Attributes Generic_LM75_10Bit_Attributes;
 
-class ON_NCT75 : public Generic_LM75 {};
+class Generic_LM75_10Bit : public Generic_LM75_Compatible {
+public:
+  Generic_LM75_10Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+    : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_10Bit_Attributes) { };
 
-class Maxim_DS1775 : public Generic_LM75 {};
+  Generic_LM75_10Bit(uint8_t i2c_address)
+    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_10Bit_Attributes) { };
+};
 
-class TI_TMP75_Compatible : public Generic_LM75_Compatible {
+// TODO: Currently don't know of sensors with fixed 10-bit resolution.
+
+extern Temperature_LM75_Derived::Attributes Generic_LM75_11Bit_Attributes;
+
+class Generic_LM75_11Bit : public Generic_LM75_Compatible {
+public:
+  Generic_LM75_11Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+    : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_11Bit_Attributes) { };
+
+  Generic_LM75_11Bit(uint8_t i2c_address)
+    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_11Bit_Attributes) { };
+};
+
+class NXP_LM75A : public Generic_LM75_11Bit {};
+class NXP_LM75B : public Generic_LM75_11Bit {};
+
+extern Temperature_LM75_Derived::Attributes Generic_LM75_12Bit_Attributes;
+
+class Generic_LM75_12Bit : public Generic_LM75_Compatible {
+public:
+  Generic_LM75_12Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+    : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_12Bit_Attributes) { };
+
+  Generic_LM75_12Bit(uint8_t i2c_address)
+    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
+};
+
+// TODO: Also capable of OneShot on bit 5, incompatible with TI TMP75 OneShot.
+class ON_NCT75 : public Generic_LM75_12Bit {};
+
+class Generic_LM75_9_to_12Bit_Compatible : public Generic_LM75_Compatible {
 protected:
+
   enum ConfigurationBits {
-    OneShot           = 7, // mask 0x80, length 1 bit
     Resolution        = 5, // mask 0x60, length 2 bits
   };
 
 public:
+
   enum Resolution {
     Resolution_9_bits   = 0,
     Resolution_10_bits  = 1,
@@ -224,8 +259,38 @@ public:
     Resolution_12_bits  = 3,
   };
 
-  TI_TMP75_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+  Generic_LM75_9_to_12Bit_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
     : Generic_LM75_Compatible(bus, i2c_address, attributes) { };
+
+  void setResolution(enum Resolution resolution) {
+    setConfigurationBitValue(resolution, ConfigurationBits::Resolution, 2);
+  }
+};
+
+extern Temperature_LM75_Derived::Attributes Generic_LM75_12Bit_Attributes;
+
+class Generic_LM75_9_to_12Bit : public Generic_LM75_9_to_12Bit_Compatible {
+public:
+  Generic_LM75_9_to_12Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+    : Generic_LM75_9_to_12Bit_Compatible(bus, i2c_address, &Generic_LM75_12Bit_Attributes) { };
+
+  Generic_LM75_9_to_12Bit(uint8_t i2c_address)
+    : Generic_LM75_9_to_12Bit_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
+};
+
+class Maxim_DS1775 : public Generic_LM75_9_to_12Bit {};
+
+class Generic_LM75_9_to_12Bit_OneShot_Compatible : public Generic_LM75_9_to_12Bit_Compatible {
+private:
+
+  enum ConfigurationBits {
+    OneShot           = 7, // mask 0x80, length 1 bit
+  };
+
+public:
+
+  Generic_LM75_9_to_12Bit_OneShot_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+    : Generic_LM75_9_to_12Bit_Compatible(bus, i2c_address, attributes) { };
 
   void startOneShotConversion() {
     setConfigurationBits(_BV(ConfigurationBits::OneShot));
@@ -234,44 +299,35 @@ public:
   bool checkConversionReady() {
     return checkConfigurationBits(_BV(ConfigurationBits::OneShot));
   }
-
-  void setResolution(enum Resolution resolution) {
-    setConfigurationBitValue(resolution, ConfigurationBits::Resolution, 2);
-  }
 };
 
-extern Temperature_LM75_Derived::Attributes TI_TMPx75_Attributes;
-
-class TI_TMPx75 : public TI_TMP75_Compatible {
+class Generic_LM75_9_to_12Bit_OneShot : public Generic_LM75_9_to_12Bit_OneShot_Compatible {
 public:
-  TI_TMPx75(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
-    : TI_TMP75_Compatible(bus, i2c_address, &TI_TMPx75_Attributes) { };
+  Generic_LM75_9_to_12Bit_OneShot(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+    : Generic_LM75_9_to_12Bit_OneShot_Compatible(bus, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 
-  TI_TMPx75(uint8_t i2c_address)
-    : TI_TMP75_Compatible(&Wire, i2c_address, &TI_TMPx75_Attributes) { };
+  Generic_LM75_9_to_12Bit_OneShot(uint8_t i2c_address)
+    : Generic_LM75_9_to_12Bit_OneShot_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
-class TI_TMP75 : public TI_TMPx75 {};
-class TI_TMP175 : public TI_TMPx75 {};
-class TI_TMP275 : public TI_TMPx75 {};
+// TODO: Also supports nonvolatile configuration registers (at pointer + 0x10).
+class Microchip_AT30TS750A : public Generic_LM75_9_to_12Bit_OneShot {};
 
-extern Temperature_LM75_Derived::Attributes TI_TMP100_Attributes;
+class Microchip_MCP9800 : public Generic_LM75_9_to_12Bit_OneShot {};
+class Microchip_MCP9801 : public Generic_LM75_9_to_12Bit_OneShot {};
+class Microchip_MCP9802 : public Generic_LM75_9_to_12Bit_OneShot {};
+class Microchip_MCP9803 : public Generic_LM75_9_to_12Bit_OneShot {};
 
-class TI_TMP10x : public TI_TMP75_Compatible {
-public:
-  TI_TMP10x(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
-    : TI_TMP75_Compatible(bus, i2c_address, &TI_TMPx75_Attributes) { };
+class TI_TMP75 : public Generic_LM75_9_to_12Bit_OneShot {};
+class TI_TMP175 : public Generic_LM75_9_to_12Bit_OneShot {};
+class TI_TMP275 : public Generic_LM75_9_to_12Bit_OneShot {};
 
-  TI_TMP10x(uint8_t i2c_address)
-    : TI_TMP75_Compatible(&Wire, i2c_address, &TI_TMPx75_Attributes) { };
-};
-
-class TI_TMP100 : public TI_TMP10x {};
-class TI_TMP101 : public TI_TMP10x {};
+class TI_TMP100 : public Generic_LM75_9_to_12Bit_OneShot {};
+class TI_TMP101 : public Generic_LM75_9_to_12Bit_OneShot {};
 
 extern Temperature_LM75_Derived::Attributes TI_TMP102_Attributes;
 
-class TI_TMP102 : public TI_TMP75_Compatible {
+class TI_TMP102 : public Generic_LM75_9_to_12Bit_OneShot_Compatible {
 private:
 
   enum ExtendedConfigurationBits {
@@ -305,10 +361,10 @@ private:
 public:
 
   TI_TMP102(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
-    : TI_TMP75_Compatible(bus, i2c_address, &TI_TMP102_Attributes) { };
+    : Generic_LM75_9_to_12Bit_OneShot_Compatible(bus, i2c_address, &TI_TMP102_Attributes) { };
 
   TI_TMP102(uint8_t i2c_address)
-    : TI_TMP75_Compatible(&Wire, i2c_address, &TI_TMP102_Attributes) { };
+    : Generic_LM75_9_to_12Bit_OneShot_Compatible(&Wire, i2c_address, &TI_TMP102_Attributes) { };
 
   void setConversionRate(enum ConversionRate rate) {
     setExtendedConfigurationBitValue(rate, ExtendedConfigurationBits::ConversionRate, 2);

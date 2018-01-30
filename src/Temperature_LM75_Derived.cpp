@@ -16,15 +16,23 @@ Temperature_LM75_Derived::Attributes Generic_LM75_Attributes = {
   .registers                      = &LM75_Compatible_Registers,
 };
 
-Temperature_LM75_Derived::Attributes TI_TMPx75_Attributes = {
+Temperature_LM75_Derived::Attributes Generic_LM75_10Bit_Attributes = {
   .temperature_width              = 16,
-  .default_temperature_resolution = 12,
+  .default_temperature_resolution = 10,
   .default_temperature_frac_width = 8,
-  .max_temperature_resolution     = 12,
+  .max_temperature_resolution     = 10,
   .registers                      = &LM75_Compatible_Registers,
 };
 
-Temperature_LM75_Derived::Attributes TI_TMP100_Attributes = {
+Temperature_LM75_Derived::Attributes Generic_LM75_11Bit_Attributes = {
+  .temperature_width              = 16,
+  .default_temperature_resolution = 11,
+  .default_temperature_frac_width = 8,
+  .max_temperature_resolution     = 11,
+  .registers                      = &LM75_Compatible_Registers,
+};
+
+Temperature_LM75_Derived::Attributes Generic_LM75_12Bit_Attributes = {
   .temperature_width              = 16,
   .default_temperature_resolution = 12,
   .default_temperature_frac_width = 8,
