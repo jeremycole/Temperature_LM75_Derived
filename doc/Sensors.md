@@ -55,6 +55,8 @@ There are many sensors based on or similar to the LM75 register layout and proto
 
 <sup>6</sup> Sensor supports non-volatile storage for the configuration, T<sub>high</sub>, T<sub>low</sub> registers by using pointer addresses `0x11`, `0x12`, and `0x13` respectively. This feature is not currently supported by the `Microchip_AT30TS750A` class.
 
+---
+
 <sup>a</sup> SOT23 pinout is SCL, GND, ALERT (or ADD<sub>1</sub>), V<sub>DD</sub>, ADD<sub>0</sub> (or unpopulated for -5 variant), SDA.
 
 <sup>b</sup> SOT23 pinout is V<sub>DD</sub>, GND, ALERT, SCL, (unpopulated), SDA.
