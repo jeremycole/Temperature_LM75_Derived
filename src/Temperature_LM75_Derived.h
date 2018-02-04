@@ -196,6 +196,7 @@ public:
     : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_Attributes) { };
 };
 
+class TI_LM75 : public Generic_LM75 {};
 class TI_LM75A : public Generic_LM75 {};
 class TI_LM75B : public Generic_LM75 {};
 class TI_LM75C : public Generic_LM75 {};
