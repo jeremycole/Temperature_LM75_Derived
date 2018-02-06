@@ -55,9 +55,9 @@ ON Semiconductor | [NCT375](http://www.onsemi.com/pub/Collateral/NCT375-D.PDF) |
 The following sensors are interesting and are probably supportable by this library with minimal effort:
 
 Manufacturer | Part | &nbsp;&nbsp;Packages&nbsp;&nbsp; | V<sub>min</sub> | V<sub>max</sub> | Resolution | Acc. | <abbr title="Supports one-shot mode">OS</abbr> | &nbsp;
-:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
+:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
 Maxim Integrated | [MAX30205](https://datasheets.maximintegrated.com/en/ds/MAX30205.pdf) | TDFN8 | 2.7V | 3.3V | 16b | ±0.1°C | ✓ | <sup>9</sup>
-Maxim Integrated | [MAX31725/6](https://datasheets.maximintegrated.com/en/ds/MAX31725-MAX31726.pdf) | TDFN8 | 2.5V | 3.7V | 16b | ±0.5°C | ✓ | <sup>8</sup> <sup>9</sup>
+Maxim Integrated | [MAX31725/6](https://datasheets.maximintegrated.com/en/ds/MAX31725-MAX31726.pdf) | TDFN8 | 2.5V | 3.7V | 16b | ±0.5°C | ✓ | <sup>8</sup>&nbsp;<sup>9</sup>
 
 # Unsupported Sensors #
 
