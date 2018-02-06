@@ -15,7 +15,6 @@ NXP | [LM75B](https://www.nxp.com/docs/en/data-sheet/LM75B.pdf) | SOIC8<br>TSSOP
 Maxim&nbsp;Integrated | [DS1775](https://datasheets.maximintegrated.com/en/ds/DS1775-DS1775R.pdf) | SOT23-5<sup>a</sup> | 2.7V | 5.5V | 9-12b | ±2°C | | `Maxim_DS1775`
 ON Semiconductor | [NCT75](https://www.onsemi.com/pub/Collateral/NCT75-D.PDF) | SOIC8<br>DFN8<br>Micro8™ | 3.0V | 5.5V | 12b | ±1°C | <sup>6</sup> | `ON_NCT75` |
 Microchip | [MCP9800/1/2/3](http://ww1.microchip.com/downloads/en/DeviceDoc/21909d.pdf) | SOIC8<br>SOT23-5<sup>b</sup> | 2.7V | 5.5V | 9-12b | ±1°C | ✓ | `Microchip_MCP9800`<br>`Microchip_MCP9801`<br>`Microchip_MCP9802`<br>`Microchip_MCP9803` |
-Microchip | [AT30TS750A](http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8855-DTS-AT30TS750A-Datasheet.pdf) | SOIC8<br>MSOP8<br>UDFN8 | 1.7V | 5.5V | 9-12b | ±0.5°C | ✓ | `Microchip_AT30TS750A` | <sup>7</sup>
 STMicroelectronics | [STLM75](http://www.st.com/content/ccc/resource/technical/document/datasheet/22/c6/56/13/dd/59/4b/43/CD00153511.pdf/files/CD00153511.pdf/jcr:content/translations/en.CD00153511.pdf) | SOIC8<br>TSSOP8 | 2.7V | 5.5V | 9b | ±2°C | | `ST_STLM75` |
 
 # Generically-Supported Sensors #
@@ -49,6 +48,7 @@ STMicroelectronics | [STCN75](http://www.st.com/content/st_com/en/products/mems-
 STMicroelectronics | [STDS75](http://www.st.com/content/st_com/en/products/mems-and-sensors/temperature-sensors/stds75.html) | TSSOP8 | 2.7V | 5.5V | 9-12b | ±0.5°C | | `Generic_LM75_9_to_12Bit` |
 STMicroelectronics | [STTS75](http://www.st.com/content/st_com/en/products/mems-and-sensors/temperature-sensors/stts75.html) | SOIC8<br>TSSOP8 | 2.7V | 5.5V | 9-12b | ±0.5°C | ✓ | `Generic_LM75_9_to_12Bit_OneShot` |
 ON Semiconductor | [NCT375](http://www.onsemi.com/pub/Collateral/NCT375-D.PDF) | SOIC8<br>DFN8<br>Micro8™ | 3.0V | 5.5V | 12b | ±1°C | <sup>6</sup> | `Generic_LM75_12Bit` |
+Microchip | [AT30TS750A](http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8855-DTS-AT30TS750A-Datasheet.pdf) | SOIC8<br>MSOP8<br>UDFN8 | 1.7V | 5.5V | 9-12b | ±0.5°C | ✓ | `Microchip_AT30TS750A` | <sup>7</sup>
 
 # Probably Supportable Sensors #
 
