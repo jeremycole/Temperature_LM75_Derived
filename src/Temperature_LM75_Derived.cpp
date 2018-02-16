@@ -136,7 +136,7 @@ void Generic_LM75_Compatible::setConfigurationBitValue(uint8_t value, uint8_t st
   writeConfigurationRegister(configuration);
 }
 
-uint16_t TI_TMP102::readExtendedConfigurationRegister() {
+uint16_t TI_TMP102_Compatible::readExtendedConfigurationRegister() {
   bus->beginTransmission(i2c_address);
   bus->write(attributes->registers->configuration);
   bus->endTransmission();
@@ -149,7 +149,7 @@ uint16_t TI_TMP102::readExtendedConfigurationRegister() {
   return c;
 }
 
-void TI_TMP102::writeExtendedConfigurationRegister(uint16_t configuration) {
+void TI_TMP102_Compatible::writeExtendedConfigurationRegister(uint16_t configuration) {
   bus->beginTransmission(i2c_address);
 
   bus->write(attributes->registers->configuration);
@@ -159,7 +159,7 @@ void TI_TMP102::writeExtendedConfigurationRegister(uint16_t configuration) {
   bus->endTransmission();
 }
 
-void TI_TMP102::setExtendedConfigurationBits(uint16_t bits) {
+void TI_TMP102_Compatible::setExtendedConfigurationBits(uint16_t bits) {
   uint16_t configuration = readExtendedConfigurationRegister();
 
   configuration |= bits;
@@ -167,7 +167,7 @@ void TI_TMP102::setExtendedConfigurationBits(uint16_t bits) {
   writeExtendedConfigurationRegister(configuration);
 }
 
-void TI_TMP102::clearExtendedConfigurationBits(uint16_t bits) {
+void TI_TMP102_Compatible::clearExtendedConfigurationBits(uint16_t bits) {
   uint16_t configuration = readExtendedConfigurationRegister();
 
   configuration &= ~bits;
@@ -175,7 +175,7 @@ void TI_TMP102::clearExtendedConfigurationBits(uint16_t bits) {
   writeExtendedConfigurationRegister(configuration);
 }
 
-void TI_TMP102::setExtendedConfigurationBitValue(uint16_t value, uint8_t start, uint8_t width) {
+void TI_TMP102_Compatible::setExtendedConfigurationBitValue(uint16_t value, uint8_t start, uint8_t width) {
   uint16_t configuration = readExtendedConfigurationRegister();
 
   uint16_t mask = ((1 << width) - 1) << start;
@@ -186,13 +186,13 @@ void TI_TMP102::setExtendedConfigurationBitValue(uint16_t value, uint8_t start, 
   writeExtendedConfigurationRegister(configuration);
 }
 
-void TI_TMP102::enableExtendedMode() {
+void TI_TMP102_Compatible::enableExtendedMode() {
   setExtendedConfigurationBits(_BV(ExtendedConfigurationBits::ExtendedMode));
   setInternalResolution(13);
   setInternalTemperatureFracWidth(7);
 }
 
-void TI_TMP102::disableExtendedMode() {
+void TI_TMP102_Compatible::disableExtendedMode() {
   clearExtendedConfigurationBits(_BV(ExtendedConfigurationBits::ExtendedMode));
   setInternalResolution(12);
   setInternalTemperatureFracWidth(8);

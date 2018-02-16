@@ -1,5 +1,5 @@
-#ifndef TI_LM_TMP_SERIES_H
-#define TI_LM_TMP_SERIES_H
+#ifndef TEMPERATURE_LM75_DERIVED_H
+#define TEMPERATURE_LM75_DERIVED_H
 
 #include <Wire.h>
 
@@ -196,13 +196,6 @@ public:
     : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_Attributes) { };
 };
 
-class TI_LM75 : public Generic_LM75 {};
-class TI_LM75A : public Generic_LM75 {};
-class TI_LM75B : public Generic_LM75 {};
-class TI_LM75C : public Generic_LM75 {};
-
-class ST_STLM75 : public Generic_LM75 {};
-
 extern Temperature_LM75_Derived::Attributes Generic_LM75_10Bit_Attributes;
 
 class Generic_LM75_10Bit : public Generic_LM75_Compatible {
@@ -213,8 +206,6 @@ public:
   Generic_LM75_10Bit(uint8_t i2c_address)
     : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_10Bit_Attributes) { };
 };
-
-// TODO: Currently don't know of sensors with fixed 10-bit resolution.
 
 extern Temperature_LM75_Derived::Attributes Generic_LM75_11Bit_Attributes;
 
@@ -227,9 +218,6 @@ public:
     : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_11Bit_Attributes) { };
 };
 
-class NXP_LM75A : public Generic_LM75_11Bit {};
-class NXP_LM75B : public Generic_LM75_11Bit {};
-
 extern Temperature_LM75_Derived::Attributes Generic_LM75_12Bit_Attributes;
 
 class Generic_LM75_12Bit : public Generic_LM75_Compatible {
@@ -240,9 +228,6 @@ public:
   Generic_LM75_12Bit(uint8_t i2c_address)
     : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
-
-// TODO: Also capable of OneShot on bit 5, incompatible with TI TMP75 OneShot.
-class ON_NCT75 : public Generic_LM75_12Bit {};
 
 class Generic_LM75_9_to_12Bit_Compatible : public Generic_LM75_Compatible {
 protected:
@@ -279,7 +264,6 @@ public:
     : Generic_LM75_9_to_12Bit_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
-class Maxim_DS1775 : public Generic_LM75_9_to_12Bit {};
 
 class Generic_LM75_9_to_12Bit_OneShot_Compatible : public Generic_LM75_9_to_12Bit_Compatible {
 private:
@@ -311,24 +295,10 @@ public:
     : Generic_LM75_9_to_12Bit_OneShot_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
-// TODO: Also supports nonvolatile configuration registers (at pointer + 0x10).
-class Microchip_AT30TS750A : public Generic_LM75_9_to_12Bit_OneShot {};
-
-class Microchip_MCP9800 : public Generic_LM75_9_to_12Bit_OneShot {};
-class Microchip_MCP9801 : public Generic_LM75_9_to_12Bit_OneShot {};
-class Microchip_MCP9802 : public Generic_LM75_9_to_12Bit_OneShot {};
-class Microchip_MCP9803 : public Generic_LM75_9_to_12Bit_OneShot {};
-
-class TI_TMP75 : public Generic_LM75_9_to_12Bit_OneShot {};
-class TI_TMP175 : public Generic_LM75_9_to_12Bit_OneShot {};
-class TI_TMP275 : public Generic_LM75_9_to_12Bit_OneShot {};
-
-class TI_TMP100 : public Generic_LM75_9_to_12Bit_OneShot {};
-class TI_TMP101 : public Generic_LM75_9_to_12Bit_OneShot {};
 
 extern Temperature_LM75_Derived::Attributes TI_TMP102_Attributes;
 
-class TI_TMP102 : public Generic_LM75_9_to_12Bit_OneShot_Compatible {
+class TI_TMP102_Compatible : public Generic_LM75_9_to_12Bit_OneShot_Compatible {
 private:
 
   enum ExtendedConfigurationBits {
@@ -361,10 +331,10 @@ private:
 
 public:
 
-  TI_TMP102(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  TI_TMP102_Compatible(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_9_to_12Bit_OneShot_Compatible(bus, i2c_address, &TI_TMP102_Attributes) { };
 
-  TI_TMP102(uint8_t i2c_address)
+  TI_TMP102_Compatible(uint8_t i2c_address)
     : Generic_LM75_9_to_12Bit_OneShot_Compatible(&Wire, i2c_address, &TI_TMP102_Attributes) { };
 
   void setConversionRate(enum ConversionRate rate) {
@@ -379,6 +349,33 @@ public:
   void disableExtendedMode();
 };
 
-class TI_TMP112 : public TI_TMP102 {};
+#define Maxim_DS1775            Generic_LM75_9_to_12Bit
+#define Maxim_DS7505            Generic_LM75_9_to_12Bit
+#define Maxim_DS75LV            Generic_LM75_9_to_12Bit
+#define Maxim_DS75LX            Generic_LM75_9_to_12Bit
+#define Microchip_AT30TS750A    Generic_LM75_9_to_12Bit_OneShot
+#define Microchip_MCP9800       Generic_LM75_9_to_12Bit_OneShot
+#define Microchip_MCP9801       Generic_LM75_9_to_12Bit_OneShot
+#define Microchip_MCP9802       Generic_LM75_9_to_12Bit_OneShot
+#define Microchip_MCP9803       Generic_LM75_9_to_12Bit_OneShot
+#define NXP_LM75A               Generic_LM75_11Bit
+#define NXP_LM75B               Generic_LM75_11Bit
+#define NXP_PCT2075             Generic_LM75_11Bit
+#define NXP_SE95                Generic_LM75_12Bit
+#define ON_NCT75                Generic_LM75_12Bit
+#define ST_STCN75               Generic_LM75
+#define ST_STLM75               Generic_LM75
+#define ST_STTS75               Generic_LM75_9_to_12Bit_OneShot
+#define TI_LM75                 Generic_LM75
+#define TI_LM75A                Generic_LM75
+#define TI_LM75B                Generic_LM75
+#define TI_LM75C                Generic_LM75
+#define TI_TMP100               Generic_LM75_9_to_12Bit_OneShot
+#define TI_TMP101               Generic_LM75_9_to_12Bit_OneShot
+#define TI_TMP102               TI_TMP102_Compatible
+#define TI_TMP112               TI_TMP102_Compatible
+#define TI_TMP175               Generic_LM75_9_to_12Bit_OneShot
+#define TI_TMP275               Generic_LM75_9_to_12Bit_OneShot
+#define TI_TMP75                Generic_LM75_9_to_12Bit_OneShot
 
-#endif // TI_LM_TMP_SERIES_H
+#endif // TEMPERATURE_LM75_DERIVED_H
