@@ -1,6 +1,6 @@
 # Changes #
 
-## Release 1.0.1 (unreleased) ##
+## Release 1.0.1 (2018-09-01) ##
 
 * Restructure vanity-named classes to use `#define` instead of subclassing so that they work consistently with regard to constructors.
 
