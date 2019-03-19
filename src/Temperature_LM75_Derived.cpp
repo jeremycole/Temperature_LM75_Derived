@@ -187,13 +187,13 @@ void TI_TMP102_Compatible::setExtendedConfigurationBitValue(uint16_t value, uint
 }
 
 void TI_TMP102_Compatible::enableExtendedMode() {
-  setExtendedConfigurationBits(_BV(ExtendedConfigurationBits::ExtendedMode));
+  setExtendedConfigurationBits(bit(ExtendedConfigurationBits::ExtendedMode));
   setInternalResolution(13);
   setInternalTemperatureFracWidth(7);
 }
 
 void TI_TMP102_Compatible::disableExtendedMode() {
-  clearExtendedConfigurationBits(_BV(ExtendedConfigurationBits::ExtendedMode));
+  clearExtendedConfigurationBits(bit(ExtendedConfigurationBits::ExtendedMode));
   setInternalResolution(12);
   setInternalTemperatureFracWidth(8);
 }

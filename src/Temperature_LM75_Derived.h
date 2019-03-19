@@ -1,6 +1,7 @@
 #ifndef TEMPERATURE_LM75_DERIVED_H
 #define TEMPERATURE_LM75_DERIVED_H
 
+#include <Arduino.h>
 #include <Wire.h>
 
 class Temperature_LM75_Derived {
@@ -163,27 +164,27 @@ public:
   }
 
   void setAlertActiveLow() {
-    clearConfigurationBits(_BV(ConfigurationBits::AlertPolarity));
+    clearConfigurationBits(bit(ConfigurationBits::AlertPolarity));
   }
 
   void setAlertActiveHigh() {
-    setConfigurationBits(_BV(ConfigurationBits::AlertPolarity));
+    setConfigurationBits(bit(ConfigurationBits::AlertPolarity));
   }
 
   void setThermostatComparatorMode() {
-    clearConfigurationBits(_BV(ConfigurationBits::ThermostatMode));
+    clearConfigurationBits(bit(ConfigurationBits::ThermostatMode));
   }
 
   void setThermostatInterruptMode() {
-    setConfigurationBits(_BV(ConfigurationBits::ThermostatMode));
+    setConfigurationBits(bit(ConfigurationBits::ThermostatMode));
   }
 
   void enableShutdownMode() {
-    setConfigurationBits(_BV(ConfigurationBits::Shutdown));
+    setConfigurationBits(bit(ConfigurationBits::Shutdown));
   }
 
   void disableShutdownMode() {
-    clearConfigurationBits(_BV(ConfigurationBits::Shutdown));
+    clearConfigurationBits(bit(ConfigurationBits::Shutdown));
   }
 };
 
@@ -278,11 +279,11 @@ public:
     : Generic_LM75_9_to_12Bit_Compatible(bus, i2c_address, attributes) { };
 
   void startOneShotConversion() {
-    setConfigurationBits(_BV(ConfigurationBits::OneShot));
+    setConfigurationBits(bit(ConfigurationBits::OneShot));
   }
 
   bool checkConversionReady() {
-    return checkConfigurationBits(_BV(ConfigurationBits::OneShot));
+    return checkConfigurationBits(bit(ConfigurationBits::OneShot));
   }
 };
 
@@ -342,7 +343,7 @@ public:
   }
 
   bool checkAlert() {
-    return checkExtendedConfigurationBits(_BV(ExtendedConfigurationBits::Alert));
+    return checkExtendedConfigurationBits(bit(ExtendedConfigurationBits::Alert));
   }
 
   void enableExtendedMode();
