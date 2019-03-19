@@ -2,6 +2,9 @@
 #define TEMPERATURE_LM75_DERIVED_H
 
 #include <Wire.h>
+#ifndef _BV
+#define _BV(b) (1UL << (b))
+#endif
 
 class Temperature_LM75_Derived {
 public:
