@@ -1,5 +1,24 @@
 #include "Temperature_LM75_Derived.h"
 
+/*
+ * A few defines to allow for waiting on
+ * data available.
+ * Ensures data is ready after we've requested
+ * it, *required* for operation on some platforms.
+ */
+#define LM75BUS_NUM_ATTEMPTS 			4
+#define LM75BUS_NUM_ATTEMPT_WAIT_MS		5
+#define LM75_WAITFORBUSAVAIL_OR_RETURN(b, retVal) { \
+    uint8_t attempts = 0; \
+	while (attempts++ < LM75BUS_NUM_ATTEMPTS && (!(b)->available())) { \
+		  delay(LM75BUS_NUM_ATTEMPT_WAIT_MS); \
+	} \
+	if (attempts >= LM75BUS_NUM_ATTEMPTS) { \
+		(b)->endTransmission(); \
+		return retVal; \
+	} }
+
+
 // The standard register layout for most devices, based on LM75.
 Temperature_LM75_Derived::RegisterLayout LM75_Compatible_Registers = {
   .temperature      = 0x00,
@@ -56,6 +75,7 @@ int16_t Temperature_LM75_Derived::readIntegerTemperatureRegister(uint8_t registe
 
   // Start a transaction to read the register data.
   bus->requestFrom(i2c_address, (uint8_t) (resolution <= 8 ? 1 : 2));
+  LM75_WAITFORBUSAVAIL_OR_RETURN(bus, -1);
 
   // Read the most significant byte of the temperature data.
   uint16_t t = bus->read() << 8;
@@ -64,6 +84,7 @@ int16_t Temperature_LM75_Derived::readIntegerTemperatureRegister(uint8_t registe
   if (resolution > 8) {
     t |= bus->read();
   }
+
 
   // Finished reading the register data.
   bus->endTransmission();
@@ -94,7 +115,10 @@ uint8_t Generic_LM75_Compatible::readConfigurationRegister() {
   bus->endTransmission();
 
   bus->requestFrom(i2c_address, (uint8_t) 1);
+
+  LM75_WAITFORBUSAVAIL_OR_RETURN(bus, 0);
   uint8_t c = bus->read();
+
   bus->endTransmission();
 
   return c;
@@ -142,6 +166,7 @@ uint16_t TI_TMP102_Compatible::readExtendedConfigurationRegister() {
   bus->endTransmission();
 
   bus->requestFrom(i2c_address, (uint8_t) 2);
+  LM75_WAITFORBUSAVAIL_OR_RETURN(bus, 0);
   uint16_t c = bus->read() << 8;
   c |= bus->read();
   bus->endTransmission();

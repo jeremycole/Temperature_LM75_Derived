@@ -1,7 +1,8 @@
 #ifndef TEMPERATURE_LM75_DERIVED_H
 #define TEMPERATURE_LM75_DERIVED_H
 
-#include <Wire.h>
+#include "includes/TempLM75Platform.h"
+
 
 class Temperature_LM75_Derived {
 public:
@@ -36,7 +37,7 @@ public:
 
 protected:
 
-  TwoWire *bus;
+  LM75::I2CWire *bus;
   uint8_t i2c_address;
   uint8_t resolution;
   uint16_t resolution_mask;
@@ -61,7 +62,7 @@ protected:
 
 public:
 
-  Temperature_LM75_Derived(TwoWire *bus, uint8_t i2c_address, Attributes *attributes) {
+  Temperature_LM75_Derived(LM75::I2CWire *bus, uint8_t i2c_address, Attributes *attributes) {
     this->bus = bus;
     this->i2c_address = i2c_address;
     this->attributes = attributes;
@@ -155,7 +156,7 @@ public:
     FaultQueueLength_6_faults  = 3,
   };
 
-  Generic_LM75_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+  Generic_LM75_Compatible(LM75::I2CWire *bus, uint8_t i2c_address, Attributes *attributes)
     : Temperature_LM75_Derived(bus, i2c_address, attributes) { };
 
   void setFaultQueueLength(enum FaultQueueLength faults) {
@@ -189,44 +190,44 @@ public:
 
 class Generic_LM75 : public Generic_LM75_Compatible {
 public:
-  Generic_LM75(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75(LM75::I2CWire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_Attributes) { };
 
   Generic_LM75(uint8_t i2c_address)
-    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_Attributes) { };
+    : Generic_LM75_Compatible(&WireDefault, i2c_address, &Generic_LM75_Attributes) { };
 };
 
 extern Temperature_LM75_Derived::Attributes Generic_LM75_10Bit_Attributes;
 
 class Generic_LM75_10Bit : public Generic_LM75_Compatible {
 public:
-  Generic_LM75_10Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75_10Bit(LM75::I2CWire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_10Bit_Attributes) { };
 
   Generic_LM75_10Bit(uint8_t i2c_address)
-    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_10Bit_Attributes) { };
+    : Generic_LM75_Compatible(&WireDefault, i2c_address, &Generic_LM75_10Bit_Attributes) { };
 };
 
 extern Temperature_LM75_Derived::Attributes Generic_LM75_11Bit_Attributes;
 
 class Generic_LM75_11Bit : public Generic_LM75_Compatible {
 public:
-  Generic_LM75_11Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75_11Bit(LM75::I2CWire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_11Bit_Attributes) { };
 
   Generic_LM75_11Bit(uint8_t i2c_address)
-    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_11Bit_Attributes) { };
+    : Generic_LM75_Compatible(&WireDefault, i2c_address, &Generic_LM75_11Bit_Attributes) { };
 };
 
 extern Temperature_LM75_Derived::Attributes Generic_LM75_12Bit_Attributes;
 
 class Generic_LM75_12Bit : public Generic_LM75_Compatible {
 public:
-  Generic_LM75_12Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75_12Bit(LM75::I2CWire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 
   Generic_LM75_12Bit(uint8_t i2c_address)
-    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
+    : Generic_LM75_Compatible(&WireDefault, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
 class Generic_LM75_9_to_12Bit_Compatible : public Generic_LM75_Compatible {
@@ -245,7 +246,7 @@ public:
     Resolution_12_bits  = 3,
   };
 
-  Generic_LM75_9_to_12Bit_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+  Generic_LM75_9_to_12Bit_Compatible(LM75::I2CWire *bus, uint8_t i2c_address, Attributes *attributes)
     : Generic_LM75_Compatible(bus, i2c_address, attributes) { };
 
   void setResolution(enum Resolution resolution) {
@@ -257,11 +258,11 @@ extern Temperature_LM75_Derived::Attributes Generic_LM75_12Bit_Attributes;
 
 class Generic_LM75_9_to_12Bit : public Generic_LM75_9_to_12Bit_Compatible {
 public:
-  Generic_LM75_9_to_12Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75_9_to_12Bit(LM75::I2CWire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_9_to_12Bit_Compatible(bus, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 
   Generic_LM75_9_to_12Bit(uint8_t i2c_address)
-    : Generic_LM75_9_to_12Bit_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
+    : Generic_LM75_9_to_12Bit_Compatible(&WireDefault, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
 
@@ -274,7 +275,7 @@ private:
 
 public:
 
-  Generic_LM75_9_to_12Bit_OneShot_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+  Generic_LM75_9_to_12Bit_OneShot_Compatible(LM75::I2CWire *bus, uint8_t i2c_address, Attributes *attributes)
     : Generic_LM75_9_to_12Bit_Compatible(bus, i2c_address, attributes) { };
 
   void startOneShotConversion() {
@@ -288,11 +289,11 @@ public:
 
 class Generic_LM75_9_to_12Bit_OneShot : public Generic_LM75_9_to_12Bit_OneShot_Compatible {
 public:
-  Generic_LM75_9_to_12Bit_OneShot(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75_9_to_12Bit_OneShot(LM75::I2CWire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_9_to_12Bit_OneShot_Compatible(bus, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 
   Generic_LM75_9_to_12Bit_OneShot(uint8_t i2c_address)
-    : Generic_LM75_9_to_12Bit_OneShot_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
+    : Generic_LM75_9_to_12Bit_OneShot_Compatible(&WireDefault, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
 
@@ -331,11 +332,11 @@ private:
 
 public:
 
-  TI_TMP102_Compatible(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  TI_TMP102_Compatible(LM75::I2CWire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_9_to_12Bit_OneShot_Compatible(bus, i2c_address, &TI_TMP102_Attributes) { };
 
   TI_TMP102_Compatible(uint8_t i2c_address)
-    : Generic_LM75_9_to_12Bit_OneShot_Compatible(&Wire, i2c_address, &TI_TMP102_Attributes) { };
+    : Generic_LM75_9_to_12Bit_OneShot_Compatible(&WireDefault, i2c_address, &TI_TMP102_Attributes) { };
 
   void setConversionRate(enum ConversionRate rate) {
     setExtendedConfigurationBitValue(rate, ExtendedConfigurationBits::ConversionRate, 2);
@@ -348,6 +349,7 @@ public:
   void enableExtendedMode();
   void disableExtendedMode();
 };
+
 
 #define Maxim_DS1775            Generic_LM75_9_to_12Bit
 #define Maxim_DS7505            Generic_LM75_9_to_12Bit
