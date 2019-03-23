@@ -1,5 +1,9 @@
 # Changes #
 
+## Release 1.0.2 (2019-03-22) ##
+
+* Replace `_BV` with `bit` for non-AVR platforms
+
 ## Release 1.0.1 (2018-09-01) ##
 
 * Restructure vanity-named classes to use `#define` instead of subclassing so that they work consistently with regard to constructors.
