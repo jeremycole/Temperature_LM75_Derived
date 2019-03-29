@@ -57,6 +57,9 @@ int16_t Temperature_LM75_Derived::readIntegerTemperatureRegister(uint8_t registe
   // Start a transaction to read the register data.
   bus->requestFrom(i2c_address, (uint8_t) (resolution <= 8 ? 1 : 2));
 
+  if(!waitForBusAvailable())
+    return -1;
+
   // Read the most significant byte of the temperature data.
   uint16_t t = bus->read() << 8;
   
@@ -94,6 +97,10 @@ uint8_t Generic_LM75_Compatible::readConfigurationRegister() {
   bus->endTransmission();
 
   bus->requestFrom(i2c_address, (uint8_t) 1);
+
+  if(!waitForBusAvailable())
+    return 0;
+  
   uint8_t c = bus->read();
   bus->endTransmission();
 
@@ -142,6 +149,10 @@ uint16_t TI_TMP102_Compatible::readExtendedConfigurationRegister() {
   bus->endTransmission();
 
   bus->requestFrom(i2c_address, (uint8_t) 2);
+
+  if(!waitForBusAvailable())
+    return 0;
+
   uint16_t c = bus->read() << 8;
   c |= bus->read();
   bus->endTransmission();

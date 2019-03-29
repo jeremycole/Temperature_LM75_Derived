@@ -3,6 +3,59 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+#define WireDefault	Wire
+
+#if defined(__AVR_ATxmega16A4__) \
+	or defined(__AVR_ATxmega16A4U__) \
+	or defined(__AVR_ATxmega16C4__) \
+	or defined(__AVR_ATxmega16D4__) \
+	or defined(__AVR_ATxmega32A4__) \
+	or defined(__AVR_ATxmega32A4U__) \
+	or defined(__AVR_ATxmega32C3__) \
+	or defined(__AVR_ATxmega32C4__) \
+	or defined(__AVR_ATxmega32D3__) \
+	or defined(__AVR_ATxmega32D4__) \
+	or defined(__AVR_ATxmega8E5__) \
+	or defined(__AVR_ATxmega16E5__) \
+	or defined(__AVR_ATxmega32E5__) \
+	or defined(__AVR_ATxmega64A3__) \
+	or defined(__AVR_ATxmega64A3U__) \
+	or defined(__AVR_ATxmega64A4U__) \
+	or defined(__AVR_ATxmega64B1__) \
+	or defined(__AVR_ATxmega64B3__) \
+	or defined(__AVR_ATxmega64C3__) \
+	or defined(__AVR_ATxmega64D3__) \
+	or defined(__AVR_ATxmega64D4__) \
+	or defined(__AVR_ATxmega64A1__) \
+	or defined(__AVR_ATxmega64A1U__) \
+	or defined(__AVR_ATxmega128A3__) \
+	or defined(__AVR_ATxmega128A3U__) \
+	or defined(__AVR_ATxmega128B1__) \
+	or defined(__AVR_ATxmega128B3__) \
+	or defined(__AVR_ATxmega128C3__) \
+	or defined(__AVR_ATxmega128D3__) \
+	or defined(__AVR_ATxmega128D4__) \
+	or defined(__AVR_ATxmega192A3__) \
+	or defined(__AVR_ATxmega192A3U__) \
+	or defined(__AVR_ATxmega192C3__) \
+	or defined(__AVR_ATxmega192D3__) \
+	or defined(__AVR_ATxmega256A3__) \
+	or defined(__AVR_ATxmega256A3U__) \
+	or defined(__AVR_ATxmega256A3B__) \
+	or defined(__AVR_ATxmega256A3BU__) \
+	or defined(__AVR_ATxmega256C3__) \
+	or defined(__AVR_ATxmega256D3__) \
+	or defined(__AVR_ATxmega384C3__) \
+	or defined(__AVR_ATxmega384D3__) \
+	or defined(__AVR_ATxmega128A1__) \
+	or defined(__AVR_ATxmega128A1U__) \
+	or defined(__AVR_ATxmega128A4U__)
+
+#define TMP75_XMEGA
+#endif
+
+
+
 
 class Temperature_LM75_Derived {
 public:
@@ -26,6 +79,8 @@ public:
 
   // The typical I2C address for any device.
   static const uint8_t DEFAULT_I2C_ADDRESS = 0x48;
+  static const uint8_t WAIT_RETRY_ATTEMPTS = 4;
+  static const uint8_t WAIT_RETRY_DELAY_MS = 5;
 
   inline static float convertCtoF(float c) {
     return c * 1.8 + 32;
@@ -37,13 +92,31 @@ public:
 
 protected:
 
-  TwoWire *bus;
+#ifdef TMP75_XMEGA
+  typedef xmWire LM75_Wire;
+#else
+  typedef TwoWire LM75_Wire;
+#endif
+
+  LM75_Wire *bus;
   uint8_t i2c_address;
   uint8_t resolution;
   uint16_t resolution_mask;
   uint8_t temperature_frac_width;
   float temperature_frac_factor;
   Attributes *attributes;
+
+  inline bool waitForBusAvailable() {
+    uint8_t attempts = 0;
+    while (attempts++ < WAIT_RETRY_ATTEMPTS && (!bus->available())) {
+      delay(WAIT_RETRY_DELAY_MS);
+    }
+    if (attempts >= WAIT_RETRY_ATTEMPTS) {
+      bus->endTransmission();
+      return false;
+    }
+    return true;
+  }
 
   // Set the internal resolution of the temperature sensor, which affects
   // conversions and which bits are discarded.
@@ -62,7 +135,7 @@ protected:
 
 public:
 
-  Temperature_LM75_Derived(TwoWire *bus, uint8_t i2c_address, Attributes *attributes) {
+  Temperature_LM75_Derived(LM75_Wire *bus, uint8_t i2c_address, Attributes *attributes) {
     this->bus = bus;
     this->i2c_address = i2c_address;
     this->attributes = attributes;
@@ -156,7 +229,7 @@ public:
     FaultQueueLength_6_faults  = 3,
   };
 
-  Generic_LM75_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+  Generic_LM75_Compatible(LM75_Wire *bus, uint8_t i2c_address, Attributes *attributes)
     : Temperature_LM75_Derived(bus, i2c_address, attributes) { };
 
   void setFaultQueueLength(enum FaultQueueLength faults) {
@@ -190,44 +263,44 @@ public:
 
 class Generic_LM75 : public Generic_LM75_Compatible {
 public:
-  Generic_LM75(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75(LM75_Wire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_Attributes) { };
 
   Generic_LM75(uint8_t i2c_address)
-    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_Attributes) { };
+    : Generic_LM75_Compatible(&WireDefault, i2c_address, &Generic_LM75_Attributes) { };
 };
 
 extern Temperature_LM75_Derived::Attributes Generic_LM75_10Bit_Attributes;
 
 class Generic_LM75_10Bit : public Generic_LM75_Compatible {
 public:
-  Generic_LM75_10Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75_10Bit(LM75_Wire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_10Bit_Attributes) { };
 
   Generic_LM75_10Bit(uint8_t i2c_address)
-    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_10Bit_Attributes) { };
+    : Generic_LM75_Compatible(&WireDefault, i2c_address, &Generic_LM75_10Bit_Attributes) { };
 };
 
 extern Temperature_LM75_Derived::Attributes Generic_LM75_11Bit_Attributes;
 
 class Generic_LM75_11Bit : public Generic_LM75_Compatible {
 public:
-  Generic_LM75_11Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75_11Bit(LM75_Wire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_11Bit_Attributes) { };
 
   Generic_LM75_11Bit(uint8_t i2c_address)
-    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_11Bit_Attributes) { };
+    : Generic_LM75_Compatible(&WireDefault, i2c_address, &Generic_LM75_11Bit_Attributes) { };
 };
 
 extern Temperature_LM75_Derived::Attributes Generic_LM75_12Bit_Attributes;
 
 class Generic_LM75_12Bit : public Generic_LM75_Compatible {
 public:
-  Generic_LM75_12Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75_12Bit(LM75_Wire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_Compatible(bus, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 
   Generic_LM75_12Bit(uint8_t i2c_address)
-    : Generic_LM75_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
+    : Generic_LM75_Compatible(&WireDefault, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
 class Generic_LM75_9_to_12Bit_Compatible : public Generic_LM75_Compatible {
@@ -246,7 +319,7 @@ public:
     Resolution_12_bits  = 3,
   };
 
-  Generic_LM75_9_to_12Bit_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+  Generic_LM75_9_to_12Bit_Compatible(LM75_Wire *bus, uint8_t i2c_address, Attributes *attributes)
     : Generic_LM75_Compatible(bus, i2c_address, attributes) { };
 
   void setResolution(enum Resolution resolution) {
@@ -258,11 +331,11 @@ extern Temperature_LM75_Derived::Attributes Generic_LM75_12Bit_Attributes;
 
 class Generic_LM75_9_to_12Bit : public Generic_LM75_9_to_12Bit_Compatible {
 public:
-  Generic_LM75_9_to_12Bit(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75_9_to_12Bit(LM75_Wire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_9_to_12Bit_Compatible(bus, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 
   Generic_LM75_9_to_12Bit(uint8_t i2c_address)
-    : Generic_LM75_9_to_12Bit_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
+    : Generic_LM75_9_to_12Bit_Compatible(&WireDefault, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
 
@@ -275,7 +348,7 @@ private:
 
 public:
 
-  Generic_LM75_9_to_12Bit_OneShot_Compatible(TwoWire *bus, uint8_t i2c_address, Attributes *attributes)
+  Generic_LM75_9_to_12Bit_OneShot_Compatible(LM75_Wire *bus, uint8_t i2c_address, Attributes *attributes)
     : Generic_LM75_9_to_12Bit_Compatible(bus, i2c_address, attributes) { };
 
   void startOneShotConversion() {
@@ -289,11 +362,11 @@ public:
 
 class Generic_LM75_9_to_12Bit_OneShot : public Generic_LM75_9_to_12Bit_OneShot_Compatible {
 public:
-  Generic_LM75_9_to_12Bit_OneShot(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  Generic_LM75_9_to_12Bit_OneShot(LM75_Wire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_9_to_12Bit_OneShot_Compatible(bus, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 
   Generic_LM75_9_to_12Bit_OneShot(uint8_t i2c_address)
-    : Generic_LM75_9_to_12Bit_OneShot_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
+    : Generic_LM75_9_to_12Bit_OneShot_Compatible(&WireDefault, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
 
@@ -332,11 +405,11 @@ private:
 
 public:
 
-  TI_TMP102_Compatible(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  TI_TMP102_Compatible(LM75_Wire *bus = &WireDefault, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_9_to_12Bit_OneShot_Compatible(bus, i2c_address, &TI_TMP102_Attributes) { };
 
   TI_TMP102_Compatible(uint8_t i2c_address)
-    : Generic_LM75_9_to_12Bit_OneShot_Compatible(&Wire, i2c_address, &TI_TMP102_Attributes) { };
+    : Generic_LM75_9_to_12Bit_OneShot_Compatible(&WireDefault, i2c_address, &TI_TMP102_Attributes) { };
 
   void setConversionRate(enum ConversionRate rate) {
     setExtendedConfigurationBitValue(rate, ExtendedConfigurationBits::ConversionRate, 2);

@@ -1,6 +1,9 @@
 BSD 3-Clause License
 
-Copyright (c) 2018, Jeremy Cole <jeremy@jcole.us> and Liam Cole <liam@liamiam.com>
+Copyright (c) 2018-2019
+  Jeremy Cole <jeremy@jcole.us>
+  Liam Cole <liam@liamiam.com>
+  Pat Deegan <psychogenic.com> (XMega Support)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
