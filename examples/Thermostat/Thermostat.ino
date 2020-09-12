@@ -40,8 +40,7 @@ void setup() {
 
 #ifdef SENSOR_ALERT_PULLUP
   // Enable the internal pullup
-  pinMode(SENSOR_ALERT_PIN, OUTPUT);
-  digitalWrite(SENSOR_ALERT_PIN, HIGH);
+  pinMode(SENSOR_ALERT_PIN, INPUT_PULLUP);
 #endif
 
   Wire.begin();
