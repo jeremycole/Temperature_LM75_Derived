@@ -265,6 +265,36 @@ public:
     : Generic_LM75_9_to_12Bit_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
+class OnSemi_OneShot : public Generic_LM75_12Bit {
+  private:
+
+  enum ConfigurationBits {
+    OneShot           = 5, // Mask 0x20, length 1 bit
+    Shutdown          = 0  // Mask 0x01, length 1 bit
+  };
+  
+  public:
+  OnSemi_OneShot(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+    : Generic_LM75_12Bit(bus, i2c_address) { };
+
+  OnSemi_OneShot(uint8_t i2c_address)
+    : Generic_LM75_12Bit(&Wire, i2c_address) { };
+  
+  void enableOneShotMode() {
+    setConfigurationBits(bit(ConfigurationBits::OneShot));
+    clearConfigurationBits(bit(ConfigurationBits::Shutdown));
+  }
+
+  void startOneShotConversion() {
+    bus->beginTransmission(i2c_address);
+
+    bus->write(0x04); // OneShot trigger register
+    bus->write(1); // Writing anything triggers the oneshot
+
+    bus->endTransmission();
+  }
+
+};
 
 class Generic_LM75_9_to_12Bit_OneShot_Compatible : public Generic_LM75_9_to_12Bit_Compatible {
 private:
@@ -364,6 +394,7 @@ public:
 #define NXP_PCT2075             Generic_LM75_11Bit
 #define NXP_SE95                Generic_LM75_12Bit
 #define ON_NCT75                Generic_LM75_12Bit
+#define ON_NCT_OS               OnSemi_OneShot
 #define ST_STCN75               Generic_LM75
 #define ST_STLM75               Generic_LM75
 #define ST_STTS75               Generic_LM75_9_to_12Bit_OneShot
