@@ -265,7 +265,7 @@ public:
     : Generic_LM75_9_to_12Bit_Compatible(&Wire, i2c_address, &Generic_LM75_12Bit_Attributes) { };
 };
 
-class OnSemi_OneShot : public Generic_LM75_12Bit {
+class OnSemi_NCTx75 : public Generic_LM75_12Bit {
   private:
 
   enum ConfigurationBits {
@@ -393,8 +393,8 @@ public:
 #define NXP_LM75B               Generic_LM75_11Bit
 #define NXP_PCT2075             Generic_LM75_11Bit
 #define NXP_SE95                Generic_LM75_12Bit
-#define ON_NCT75                Generic_LM75_12Bit
-#define ON_NCT_OS               OnSemi_OneShot
+#define ON_NCT75                OnSemi_NCTx75
+#define ON_NCT375               OnSemi_NCTx75
 #define ST_STCN75               Generic_LM75
 #define ST_STLM75               Generic_LM75
 #define ST_STTS75               Generic_LM75_9_to_12Bit_OneShot
