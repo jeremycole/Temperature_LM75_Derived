@@ -274,10 +274,10 @@ class OnSemi_NCTx75 : public Generic_LM75_12Bit {
   };
   
   public:
-  OnSemi_OneShot(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
+  OnSemi_NCTx75(TwoWire *bus = &Wire, uint8_t i2c_address = DEFAULT_I2C_ADDRESS)
     : Generic_LM75_12Bit(bus, i2c_address) { };
 
-  OnSemi_OneShot(uint8_t i2c_address)
+  OnSemi_NCTx75(uint8_t i2c_address)
     : Generic_LM75_12Bit(&Wire, i2c_address) { };
   
   void enableOneShotMode() {
