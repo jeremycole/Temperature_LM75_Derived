@@ -10,7 +10,7 @@ in Celcius every 250ms. Any LM75-derived temperature should work.
 Generic_LM75 temperature;
 
 void setup() {
-  while(!Serial) {}
+  while(!Serial) {delay(0);}
   
   Serial.begin(9600);
 

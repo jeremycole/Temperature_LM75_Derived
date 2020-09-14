@@ -19,7 +19,7 @@ from an otherwise shutdown sensor. This can be used for two purposes:
 Generic_LM75_9_to_12Bit_OneShot temperature;
 
 void setup() {
-  while(!Serial) {}
+  while(!Serial) {delay(0);}
   
   Serial.begin(9600);
 

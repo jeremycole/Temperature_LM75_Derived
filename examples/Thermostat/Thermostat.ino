@@ -34,7 +34,7 @@ an interrupt upon the sensor crossing a the T_high -or- T_low thresholds
 Generic_LM75 temperature;
 
 void setup() {
-  while(!Serial) {}
+  while(!Serial) {delay(0);}
 
   Serial.begin(9600);
 
