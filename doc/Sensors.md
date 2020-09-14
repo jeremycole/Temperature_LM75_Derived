@@ -88,6 +88,7 @@ There are many sensors based on or similar to the LM75 register layout and proto
 <sup>10</sup> Sensor supports setting the conversion rate through a separate register. This feature is not currently supported.
 
 <sup>11</sup> Sensor supports one-shot conversion, but incompatibly with the TMP75 implementation. Check the `OnSemiOneShotMode` example for a detailed example of how to use this.
+
 ---
 
 <sup>a</sup> SOT23 pinout is SCL, GND, ALERT (or ADD<sub>1</sub>), V<sub>DD</sub>, ADD<sub>0</sub> (or unpopulated for -5 variant), SDA.
