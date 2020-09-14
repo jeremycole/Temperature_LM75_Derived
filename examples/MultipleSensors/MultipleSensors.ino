@@ -12,7 +12,7 @@ Generic_LM75 temperature1(0x48);
 Generic_LM75 temperature2(0x49);
 
 void setup() {
-  while(!Serial) {}
+  while(!Serial) {delay(0);}
   
   Serial.begin(9600);
 
