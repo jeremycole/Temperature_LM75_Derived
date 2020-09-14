@@ -13,7 +13,7 @@ NXP | [LM75A](https://www.nxp.com/docs/en/data-sheet/LM75A.pdf) | SOIC8<br>TSSOP
 NXP | [LM75B](https://www.nxp.com/docs/en/data-sheet/LM75B.pdf) | SOIC8<br>TSSOP8<br>XSON8U<br>HWSON8 | 2.8V | 5.5V | 11b | ±2°C | | `NXP_LM75B` |
 NXP | [PCT2075](https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf) | SOIC8<br>TSSOP8<br>HWSON8<br>TSOP6 | 2.7V | 5.5V | 11b | ±1°C | | `NXP_PCT2075` | <sup>10</sup>
 NXP | [SE95](https://www.nxp.com/docs/en/data-sheet/SE95.pdf) | SOIC8<br>TSSOP8 | 2.8V | 5.5V | 13b | ±1°C | | `NXP_SE95` |
-ON Semiconductor | [NCT75](https://www.onsemi.com/pub/Collateral/NCT75-D.PDF) | SOIC8<br>DFN8<br>Micro8™ | 3.0V | 5.5V | 12b | ±1°C | <sup>11</sup> | `ON_NCT75`<br>`ON_NCT_OS`|
+ON Semiconductor | [NCT75](https://www.onsemi.com/pub/Collateral/NCT75-D.PDF) | SOIC8<br>DFN8<br>Micro8™ | 3.0V | 5.5V | 12b | ±1°C | <sup>11</sup> | `ON_NCT75` |
 STMicroelectronics | [STCN75](http://www.st.com/content/st_com/en/products/mems-and-sensors/temperature-sensors/stcn75.html) | SOIC8<br>TSSOP8 | 2.7V | 5.5V | 9b | ±0.5°C | | `Generic_LM75` |
 STMicroelectronics | [STLM75](http://www.st.com/content/ccc/resource/technical/document/datasheet/22/c6/56/13/dd/59/4b/43/CD00153511.pdf/files/CD00153511.pdf/jcr:content/translations/en.CD00153511.pdf) | SOIC8<br>TSSOP8 | 2.7V | 5.5V | 9b | ±2°C | | `ST_STLM75` |
 STMicroelectronics | [STTS75](http://www.st.com/content/st_com/en/products/mems-and-sensors/temperature-sensors/stts75.html) | SOIC8<br>TSSOP8 | 2.7V | 5.5V | 9-12b | ±0.5°C | ✓ | `ST_STTS75` |
@@ -48,7 +48,7 @@ Maxim Integrated | [MAX6625](https://datasheets.maximintegrated.com/en/ds/MAX662
 Maxim Integrated | [MAX6626](https://datasheets.maximintegrated.com/en/ds/MAX6625-MAX6626.pdf) | TDFN6 | 3.0V | 5.5V | 12b | ±1°C | | `Generic_LM75_12Bit` |
 Microchip | [AT30TS750A](http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-8855-DTS-AT30TS750A-Datasheet.pdf) | SOIC8<br>MSOP8<br>UDFN8 | 1.7V | 5.5V | 9-12b | ±0.5°C | ✓ | `Microchip_AT30TS750A` | <sup>7</sup>
 NXP | [PCT2202](https://www.nxp.com/docs/en/data-sheet/PCT2202.pdf) | WLCSP6 | 1.65V | 1.95V | 12-13b <sup>1</sup> | ±0.5°C | | `Generic_LM75_12Bit` |
-ON Semiconductor | [NCT375](http://www.onsemi.com/pub/Collateral/NCT375-D.PDF) | SOIC8<br>DFN8<br>Micro8™ | 3.0V | 5.5V | 12b | ±1°C | <sup>11</sup> | `Generic_LM75_12Bit`<br>`ON_NCT_OS` |
+ON Semiconductor | [NCT375](http://www.onsemi.com/pub/Collateral/NCT375-D.PDF) | SOIC8<br>DFN8<br>Micro8™ | 3.0V | 5.5V | 12b | ±1°C | <sup>11</sup> | `ON_NCT375` |
 STMicroelectronics | [STDS75](http://www.st.com/content/st_com/en/products/mems-and-sensors/temperature-sensors/stds75.html) | TSSOP8 | 2.7V | 5.5V | 9-12b | ±0.5°C | | `Generic_LM75_9_to_12Bit` |
 Texas&nbsp;Instruments | [TMP112](http://www.ti.com/lit/ds/symlink/tmp112.pdf) | SOT563 | 1.4V | 3.6V | 9-13b <sup>1</sup> | ±0.5°C | ✓ | `TI_TMP112` | <sup>2</sup>&nbsp;<sup>3</sup>&nbsp;<sup>4</sup>
 
@@ -87,7 +87,7 @@ There are many sensors based on or similar to the LM75 register layout and proto
 
 <sup>10</sup> Sensor supports setting the conversion rate through a separate register. This feature is not currently supported.
 
-<sup>11</sup> Sensor supports one-shot conversion, but incompatibly with the TMP75 implementation. Check the `OnSemiOneShotMode` example on how to use this.
+<sup>11</sup> Sensor supports one-shot conversion, but incompatibly with the TMP75 implementation. Check the `OnSemiOneShotMode` example for a detailed example of how to use this.
 ---
 
 <sup>a</sup> SOT23 pinout is SCL, GND, ALERT (or ADD<sub>1</sub>), V<sub>DD</sub>, ADD<sub>0</sub> (or unpopulated for -5 variant), SDA.
