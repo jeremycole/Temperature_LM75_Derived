@@ -19,11 +19,11 @@ from an otherwise shutdown sensor. This can be used for two purposes:
 
 #include <Temperature_LM75_Derived.h>
 
-OnSemi_OneShot temperature;
+ON_NCT75 temperature;
 
 void setup() {
   while(!Serial) {}
-  
+
   Serial.begin(9600);
 
   Wire.begin();
@@ -42,8 +42,8 @@ void loop() {
   The datasheet instead lists the typical conversion time to be 48.5 ms.
   As it doesn't list the max conversion time, we wait ~2x the typical time
   */
-  delay(100); 
-  
+  delay(100);
+
   Serial.print("Temperature is: ");
   Serial.print(temperature.readTemperatureC());
   Serial.println(" C!");
